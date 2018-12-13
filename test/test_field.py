@@ -1,5 +1,6 @@
 import unittest
 
+from markov_libs import FieldStateUnknownException
 from markov_libs import FieldRequiresValueException
 from markov_libs import Field
 
@@ -23,3 +24,6 @@ class TestField(unittest.TestCase):
 
     def test_terminal_field_without_value_should_raise_exception(self):
         self.assertRaises(FieldRequiresValueException, Field, Field.terminal)
+
+    def test_unknown_state_raises_exception(self):
+        self.assertRaises(FieldStateUnknownException, Field, "K")

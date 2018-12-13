@@ -1,0 +1,22 @@
+title = "default"
+size = [4, 3]
+reward = -0.04
+gamma = 1
+epsilon = 0
+probability = [0.8, 0.1, 0.1, 0.0]
+
+[states]
+    [states.start]
+        position = [1, 1]
+
+    [[states.terminal]]
+        position = [4, 3]
+        value = 1
+
+    [[states.terminal]]
+        position = [4, 2]
+        value = -1
+
+    [[states.forbidden]]
+        position = [2, 2]
+
