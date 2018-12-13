@@ -3,6 +3,7 @@ import unittest.mock
 import toml
 
 from markov_libs import World
+from markov_libs import Field
 
 
 class TestWorld(unittest.TestCase):
@@ -30,11 +31,18 @@ class TestWorld(unittest.TestCase):
                 position = [2, 2]
     """
 
+    mock_dict_content = toml.loads(mock_file_content)
+
     def setUp(self):
         self.world = World()
 
-    def test_has_load_from_file_method(self):
-        self.assertTrue(hasattr(self.world, 'load_from_file'))
+    def test_world_has_fields(self):
+        self.assertTrue(hasattr(self.world, '_board'))
+        self.assertTrue(hasattr(self.world, '_reward'))
+        self.assertTrue(hasattr(self.world, 'title'))
+        self.assertTrue(hasattr(self.world, 'gamma'))
+        self.assertTrue(hasattr(self.world, 'epsilon'))
+        self.assertTrue(hasattr(self.world, 'probability'))
 
     def test_has__parse_toml_method(self):
         self.assertTrue(hasattr(self.world, '_parse_toml'))
@@ -56,4 +64,3 @@ class TestWorld(unittest.TestCase):
     def test__parse_toml_returns_correct_dict(self):
         correct_dict = toml.loads(self.mock_file_content)
         self.assertEqual(self.world._parse_toml('/dev/null'), correct_dict)
-

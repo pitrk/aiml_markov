@@ -27,3 +27,18 @@ class TestField(unittest.TestCase):
 
     def test_unknown_state_raises_exception(self):
         self.assertRaises(FieldStateUnknownException, Field, "K")
+
+    def test_eq_is_true_with_both_fields_the_same(self):
+        field1 = Field("T", 20)
+        field2 = Field("T", 20)
+        self.assertTrue(field1 == field2)
+
+    def test_eq_is_false_with_both_attributes_different(self):
+        field1 = Field("T", 20)
+        field2 = Field("N", 19)
+        self.assertFalse(field1 == field2)
+
+    def test_eq_is_false_with_one_attribute_different(self):
+        field1 = Field("T", 20)
+        field2 = Field("T", 19)
+        self.assertFalse(field1 == field2)

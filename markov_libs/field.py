@@ -23,3 +23,6 @@ class Field:
             raise FieldRequiresValueException("Field type {} has to have a reward value.".format(state))
         self.state = state
         self.reward = reward
+
+    def __eq__(self, other):
+        return self.state == other.state and self.reward == other.reward
