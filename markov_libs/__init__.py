@@ -4,5 +4,6 @@ from .field import Field
 
 from .world_factory import WorldFactory
 from .world_factory import BoardEmptyException
+from .world_factory import BoardNoDefaultException
 
 from .world import World

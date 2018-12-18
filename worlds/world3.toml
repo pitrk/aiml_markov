@@ -5,50 +5,62 @@ gamma = 1
 epsilon = 0
 probability = [0.8, 0.1, 0.1, 0.0]
 
-[states]
-    [states.start]
-        position = [3, 3]
+[[state]]
+    s_type = "S"
+    position = [3, 3]
 
-    [[states.terminal]]
-        position = [1, 1]
-        value = -1
+[[state]]
+    s_type = "T"
+    position = [1, 1]
+    value = -1
 
-    [[states.terminal]]
-        position = [1, 5]
-        value = 1
+[[state]]
+    s_type = "T"
+    position = [1, 5]
+    value = 1
 
-    [[states.terminal]]
-        position = [5, 1]
-        value = 1
+[[state]]
+    s_type = "T"
+    position = [5, 1]
+    value = 1
 
-    [[states.terminal]]
-        position = [5, 5]
-        value = -1
+[[state]]
+    s_type = "T"
+    position = [5, 5]
+    value = -1
 
-    [[states.forbidden]]
-        position = [2, 2]
+[[state]]
+    s_type = "F"
+    position = [2, 2]
 
-    [[states.forbidden]]
-        position = [4, 2]
+[[state]]
+    s_type = "F"
+    position = [4, 2]
 
-    [[states.forbidden]]
-        position = [2, 4]
+[[state]]
+    s_type = "F"
+    position = [2, 4]
 
-    [[states.forbidden]]
-        position = [4, 4]
+[[state]]
+    s_type = "F"
+    position = [4, 4]
 
-    [[states.special]]
-        position = [3, 1]
-        value = 50
+[[state]]
+    s_type = "S"
+    position = [3, 1]
+    value = 50
 
-    [[states.special]]
-        position = [1, 3]
-        value = -50
+[[state]]
+    s_type = "S"
+    position = [1, 3]
+    value = -50
 
-    [[states.special]]
-        position = [5, 3]
-        value = -50
+[[state]]
+    s_type = "S"
+    position = [5, 3]
+    value = -50
 
-    [[states.special]]
-        position = [3, 5]
-        value = 50
+[[state]]
+    s_type = "S"
+    position = [3, 5]
+    value = 50

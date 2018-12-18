@@ -1,7 +1,6 @@
 import toml
 
-
-from markov_libs import Field
+from markov_libs import WorldFactory
 
 
 class BoardEmptyException(Exception):
@@ -10,15 +9,27 @@ class BoardEmptyException(Exception):
 
 class World:
     def __init__(self):
+        self.data = None
         self._board = []
-        self._reward = None
         self.title = None
         self.gamma = None
         self.epsilon = None
         self.probability = []
 
-    @staticmethod
-    def _parse_toml(filename):
+    def _parse_toml(self, filename):
         with open(filename, 'r') as f:
             data = toml.loads(f.read())
-        return data
+        self.data = data
+
+    def _set_values(self):
+        self.title = self.data['title']
+        self.gamma = self.data['gamma']
+        self.epsilon = self.data['epsilon']
+        self.probability = self.data['probability']
+        world_factory = WorldFactory(self.data)
+        world_factory.board_generator()
+        self._board = world_factory.board
+
+    def load(self, filename: str):
+        self._parse_toml(filename)
+        self._set_values()

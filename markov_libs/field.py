@@ -14,7 +14,7 @@ class Field:
     special = "B"
     possible_states = [terminal, special, forbidden, normal, start]
 
-    def __init__(self, state: str, reward: int = None):
+    def __init__(self, state: str, reward: float = None):
         if state not in self.possible_states:
             raise FieldStateUnknownException("State {} is unknown. Use one of states: {}".format(
                 state, self.possible_states)
