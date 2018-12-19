@@ -16,6 +16,10 @@ class World:
         self.epsilon = None
         self.probability = []
 
+    def load(self, filename: str):
+        self._parse_toml(filename)
+        self._set_values()
+
     def _parse_toml(self, filename):
         with open(filename, 'r') as f:
             data = toml.loads(f.read())
@@ -29,7 +33,3 @@ class World:
         world_factory = WorldFactory(self.data)
         world_factory.board_generator()
         self._board = world_factory.board
-
-    def load(self, filename: str):
-        self._parse_toml(filename)
-        self._set_values()

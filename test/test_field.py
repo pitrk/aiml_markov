@@ -7,13 +7,11 @@ from markov_libs import Field
 
 class TestField(unittest.TestCase):
     def test_initialise_field(self):
-        field = Field(Field.normal)
-        self.assertEqual(field.state, Field.normal)
-        self.assertEqual(field.reward, None)
-
-    def test_initialise_field_with_value(self):
-        field = Field(Field.special, 50)
-        self.assertEqual(field.reward, 50)
+        field = Field(Field.normal, x=0, y=1, reward=-0.04)
+        self.assertEqual(Field.normal, field.state)
+        self.assertEqual(0, field.x)
+        self.assertEqual(1, field.y)
+        self.assertEqual(None, field.reward)
 
     def test_check_class_attributes(self):
         self.assertEqual(Field.terminal, "T")
@@ -23,14 +21,14 @@ class TestField(unittest.TestCase):
         self.assertEqual(Field.special, "B")
 
     def test_terminal_field_without_value_should_raise_exception(self):
-        self.assertRaises(FieldRequiresValueException, Field, Field.terminal)
+        self.assertRaises(FieldRequiresValueException, Field, Field.terminal, x=0, y=0)
 
     def test_unknown_state_raises_exception(self):
-        self.assertRaises(FieldStateUnknownException, Field, "K")
+        self.assertRaises(FieldStateUnknownException, Field, "K", x=0, y=0)
 
     def test_eq_is_true_with_both_fields_the_same(self):
-        field1 = Field("T", 20)
-        field2 = Field("T", 20)
+        field1 = Field("T", x=1, y=2, reward=20)
+        field2 = Field("T", x=1, y=2, reward=20)
         self.assertTrue(field1 == field2)
 
     def test_eq_is_false_with_both_attributes_different(self):
