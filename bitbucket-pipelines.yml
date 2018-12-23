@@ -1,6 +1,3 @@
-# This is a sample build configuration for Python.
-# Check our guides at https://confluence.atlassian.com/x/x4UWN for more examples.
-
 image: python:3.7
 
 pipelines:
@@ -10,7 +7,4 @@ pipelines:
           - pip
         script:
           - pip install -r requirements.txt
-          
-    - step:
-        script:
           - python -m unittest discover test/
