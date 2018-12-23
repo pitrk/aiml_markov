@@ -89,12 +89,36 @@ class TestWorld(unittest.TestCase):
         self.assertEqual(1, self.world.gamma)
         self.assertEqual(0, self.world.epsilon)
         self.assertEqual([0.8, 0.1, 0.1, 0.0], self.world.probability)
-        self.assertEqual(Field(Field.normal, reward=-0.04), self.world._board[2][1])
-        self.assertEqual(Field(Field.start), self.world._board[0][0])
-        self.assertEqual(Field(Field.terminal, reward=1), self.world._board[2][3])
-        self.assertEqual(Field(Field.terminal, reward=-1), self.world._board[1][3])
-        self.assertEqual(Field(Field.forbidden), self.world._board[1][1])
-        self.assertEqual(Field(Field.special, reward=2), self.world._board[1][2])
+
+        self.assertEqual(Field.normal, self.world._board[2][1].state)
+        self.assertEqual(-0.04, self.world._board[2][1].reward)
+        self.assertEqual(1, self.world._board[2][1].x)
+        self.assertEqual(2, self.world._board[2][1].y)
+
+        self.assertEqual(Field.start, self.world._board[0][0].state)
+        self.assertEqual(-0.04, self.world._board[0][0].reward)
+        self.assertEqual(0, self.world._board[0][0].x)
+        self.assertEqual(0, self.world._board[0][0].y)
+
+        self.assertEqual(Field.terminal, self.world._board[2][3].state)
+        self.assertEqual(1, self.world._board[2][3].reward)
+        self.assertEqual(3, self.world._board[2][3].x)
+        self.assertEqual(2, self.world._board[2][3].y)
+
+        self.assertEqual(Field.terminal, self.world._board[1][3].state)
+        self.assertEqual(-1, self.world._board[1][3].reward)
+        self.assertEqual(3, self.world._board[1][3].x)
+        self.assertEqual(1, self.world._board[1][3].y)
+
+        self.assertEqual(Field.forbidden, self.world._board[1][1].state)
+        self.assertEqual(None, self.world._board[1][1].reward)
+        self.assertEqual(1, self.world._board[1][1].x)
+        self.assertEqual(1, self.world._board[1][1].y)
+
+        self.assertEqual(Field.special, self.world._board[1][2].state)
+        self.assertEqual(2, self.world._board[1][2].reward)
+        self.assertEqual(2, self.world._board[1][2].x)
+        self.assertEqual(1, self.world._board[1][2].y)
 
     def test_has_load_method(self):
         self.assertTrue(hasattr(self.world, 'load'))

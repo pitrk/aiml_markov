@@ -1,5 +1,6 @@
 from .field import FieldStateUnknownException
 from .field import FieldRequiresValueException
+from .field import EmptyUtilityHistoryException
 from .field import Field
 
 from .world_factory import WorldFactory
