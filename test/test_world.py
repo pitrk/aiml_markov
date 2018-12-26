@@ -1,9 +1,9 @@
-import unittest
 import unittest.mock
+
 import toml
 
-from markov_libs import World
 from markov_libs import Field
+from markov_libs import World
 
 
 class TestWorld(unittest.TestCase):
@@ -51,6 +51,7 @@ class TestWorld(unittest.TestCase):
         self.assertTrue(hasattr(self.world, 'gamma'))
         self.assertTrue(hasattr(self.world, 'epsilon'))
         self.assertTrue(hasattr(self.world, 'probability'))
+        self.assertTrue(hasattr(World, 'actions'))
 
     def test_has__parse_toml_method(self):
         self.assertTrue(hasattr(self.world, '_parse_toml'))
@@ -122,3 +123,96 @@ class TestWorld(unittest.TestCase):
 
     def test_has_load_method(self):
         self.assertTrue(hasattr(self.world, 'load'))
+
+
+class TestWorldLoaded(unittest.TestCase):
+    mock_file_content = """
+        title = "default"
+        size = [4, 3]
+        reward = -0.04
+        gamma = 1
+        epsilon = 0
+        probability = [0.8, 0.1, 0.1, 0.0]
+
+        [[state]]
+            s_type = 'S'
+            position = [0, 0]
+
+        [[state]]
+            s_type = 'T'
+            position = [3, 2]
+            value = 1
+
+        [[state]]
+            s_type = 'T'
+            position = [3, 1]
+            value = -1
+
+        [[state]]
+            s_type = 'F'
+            position = [1, 1]
+
+        [[state]]
+            s_type = 'B'
+            position = [2, 1]
+            value = 2
+        """
+
+    mock_dict_content = toml.loads(mock_file_content)
+
+    @unittest.mock.patch(
+        'builtins.open',
+        new=unittest.mock.mock_open(read_data=mock_file_content),
+        create=True
+    )
+    def setUp(self):
+        self.world = World()
+        self.world.load('/dev/null')
+
+    def test_has_forward_probability_property(self):
+        self.assertTrue(hasattr(self.world, 'forward_probability'))
+
+    def test_forward_probability_returns_correct_value(self):
+        self.assertEqual(
+            self.mock_dict_content['probability'][0],
+            self.world.forward_probability
+        )
+
+    def test_has_left_probability_property(self):
+        self.assertTrue(hasattr(self.world, 'left_probability'))
+
+    def test_left_probability_returns_correct_value(self):
+        self.assertEqual(
+            self.mock_dict_content['probability'][1],
+            self.world.left_probability
+        )
+
+    def test_has_right_probability_property(self):
+        self.assertTrue(hasattr(self.world, 'right_probability'))
+
+    def test_right_probability_returns_correct_value(self):
+        self.assertEqual(
+            self.mock_dict_content['probability'][2],
+            self.world.right_probability
+        )
+
+    def test_has_backward_probability_property(self):
+        self.assertTrue(hasattr(self.world, 'backward_probability'))
+
+    def test_backward_probability_returns_correct_value(self):
+        self.assertEqual(
+            self.mock_dict_content['probability'][3],
+            self.world.backward_probability
+        )
+
+    def test_has_field_method(self):
+        self.assertTrue(hasattr(self.world, 'field'))
+
+    def test_field_method_returns_correct_field_object(self):
+        method_returns = self.world.field(x=3, y=2)
+        self.assertEqual(self.world._board[2][3], method_returns)
+
+    def test_field_method_allows_to_modify_field(self):
+        self.assertEqual([], self.world._board[1][0].utility_history)
+        self.world.field(0, 1).utility = 0.88
+        self.assertEqual(0.88, self.world._board[1][0].utility)

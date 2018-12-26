@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List
 
 from markov_libs import Field
 
@@ -35,7 +35,7 @@ class WorldFactory:
 
     @staticmethod
     def _generate_table_for_board(x: int, y: int) -> List[List[None]]:
-        return [[None]*x for _ in range(y)]
+        return [[None] * x for _ in range(y)]
 
     def _fill_board_with_default(self, board: List[List[None]]) -> List[List[Field]]:
         if not board:
@@ -68,4 +68,3 @@ class WorldFactory:
             return state_dict['value']
         else:
             return None
-

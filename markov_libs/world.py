@@ -8,6 +8,8 @@ class BoardEmptyException(Exception):
 
 
 class World:
+    actions = ['^', '<', '>', 'v']
+
     def __init__(self):
         self.data = None
         self._board = []
@@ -15,6 +17,22 @@ class World:
         self.gamma = None
         self.epsilon = None
         self.probability = []
+
+    @property
+    def forward_probability(self):
+        return self.probability[0]
+
+    @property
+    def left_probability(self):
+        return self.probability[1]
+
+    @property
+    def right_probability(self):
+        return self.probability[2]
+
+    @property
+    def backward_probability(self):
+        return self.probability[3]
 
     def load(self, filename: str):
         self._parse_toml(filename)
@@ -33,3 +51,6 @@ class World:
         world_factory = WorldFactory(self.data)
         world_factory.board_generator()
         self._board = world_factory.board
+
+    def field(self, x: int, y: int):
+        return self._board[y][x]
