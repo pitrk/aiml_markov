@@ -2,7 +2,7 @@ import unittest.mock
 
 import toml
 
-from markov_libs import Field
+from markov_libs import Field, UtilitiesNotCalculated
 from markov_libs import FieldForbiddenException
 from markov_libs import FieldDoesNotExistException
 from markov_libs import World
@@ -471,4 +471,61 @@ class TestWorldLoaded(unittest.TestCase):
         method_returns = self.world._get_utilities_for_fields(fields_list)
         self.assertEqual(expected_list, method_returns)
 
+    def test_has_calculate_policy_method(self):
+        self.assertTrue(hasattr(self.world, 'calculate_policy'))
 
+    def test_calculate_policy_calculates_correct_policy_for_default_map(self):
+        self.world.mdp(termination_value=0.0001)
+        self.world.calculate_policy()
+        expected_policy = [World.up, World.left, World.left, World.left,
+                           World.up, None, World.up, None,
+                           World.right, World.right, World.right, None]
+        calculated_policy = [field.policy for field in self.world.all_fields()]
+        self.assertEqual(expected_policy, calculated_policy)
+
+    def test_has__calculate_policy_for_field_method(self):
+        self.assertTrue(hasattr(self.world, '_calculate_policy_for_field'))
+
+    def test__calculate_policy_for_field_calculates_correct_policy_for_0_0(self):
+        self.world.mdp(termination_value=0.0001)
+        field = self.world.field(0, 0)
+        self.assertEqual(World.up, self.world._calculate_policy_for_field(field))
+
+    def test__calculate_policy_for_field_calculates_correct_policy_for_2_0(self):
+        self.world.mdp(termination_value=0.0001)
+        field = self.world.field(2, 0)
+        self.assertEqual(World.left, self.world._calculate_policy_for_field(field))
+
+    # def test_has__existing_neighbours_utilities_method(self):
+    #     self.assertTrue(hasattr(self.world, '_existing_neighbours_utilities'))
+    #
+    # def test__existing_neighbours_utilities_returns_list_of_utilities(self):
+    #     self.world.mdp(termination_value=0.0001)
+    #     field = self.world.field(1, 0)
+    #     expected_result = [None, self.world.field(0, 0).utility, self.world.field(2, 0).utility, None]
+    #     self.assertEqual(expected_result, self.world._existing_neighbours_utilities(field))
+    #
+    # def test__existing_neighbours_utilities_raises_exception_when_utilities_not_calculated(self):
+    #     field = self.world.field(0, 0)
+    #     self.assertRaises(UtilitiesNotCalculated, self.world._existing_neighbours_utilities, field,)
+    #
+    # def test_has__existing_neighbours_method(self):
+    #     self.assertTrue(hasattr(self.world, '_existing_neighbours'))
+    #
+    # def test__existing_neighbours_returns_list_in_order_u_l_r_d_where_nonexisting_neighbour_is_none(self):
+    #     field = self.world.field(1, 0)
+    #     expected_list = [None, self.world.field(0, 0), self.world.field(2, 0), None]
+    #     self.assertEqual(expected_list, self.world._existing_neighbours(field))
+    #
+    # def test_has__field_or_none_method(self):
+    #     self.assertTrue(hasattr(self.world, '_field_or_none'))
+    #
+    # def test__field_or_none_returns_field_if_exists(self):
+    #     expected = self.world.field(0, 0)
+    #     self.assertIs(expected, self.world._field_or_none(x=0, y=0))
+    #
+    # def test__field_or_none_returns_none_if_field_does_not_exist(self):
+    #     self.assertIsNone(self.world._field_or_none(5, 5))
+    #
+    # def test__field_or_none_returns_none_if_field_is_forbidden(self):
+    #     self.assertIsNone(self.world._field_or_none(1, 1))

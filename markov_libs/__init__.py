@@ -9,4 +9,5 @@ from .world_factory import BoardNoDefaultException
 
 from .world import FieldDoesNotExistException
 from .world import FieldForbiddenException
+from .world import UtilitiesNotCalculated
 from .world import World
