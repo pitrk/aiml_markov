@@ -170,13 +170,13 @@ class TestWorldLoaded(unittest.TestCase):
         self.world = World()
         self.world.load('/dev/null')
 
-    def test_has_forward_probability_property(self):
-        self.assertTrue(hasattr(self.world, 'forward_probability'))
+    def test_has_front_probability_property(self):
+        self.assertTrue(hasattr(self.world, 'front_probability'))
 
-    def test_forward_probability_returns_correct_value(self):
+    def test_front_probability_returns_correct_value(self):
         self.assertEqual(
             self.mock_dict_content['probability'][0],
-            self.world.forward_probability
+            self.world.front_probability
         )
 
     def test_has_left_probability_property(self):
@@ -346,3 +346,54 @@ class TestWorldLoaded(unittest.TestCase):
         self.assertTupleEqual((3, 0), self.check_position(self.world.position_back, 3, 0, '<'))
         self.assertTupleEqual((0, 2), self.check_position(self.world.position_back, 0, 2, '>'))
         self.assertTupleEqual((0, 2), self.check_position(self.world.position_back, 0, 2, 'v'))
+
+    def test_has_mdf_method(self):
+        self.assertTrue(hasattr(self.world, 'mdf'))
+
+    def test_has_pu_sum_for_action_method(self):
+        self.assertTrue(hasattr(self.world, 'pu_sum_for_action'))
+
+    def test_pu_sum_for_action_returns_float(self):
+        field = self.world.field(0, 0)
+        action = World.up
+        self.assertIsInstance(self.world.pu_sum_for_action(field, action), float)
+
+    def test_pu_sum_for_action_calculates_correct_value(self):
+        utility_this_field = self.world.field(0, 0).utility = 0.1
+        utility_field_up = self.world.field(0, 1).utility = 0.2
+        utility_field_right = self.world.field(1, 0).utility = 0.3
+        field = self.world.field(0, 0)
+        action = World.up
+        expected_value = sum([
+            utility_field_up * self.world.front_probability,
+            utility_this_field * self.world.left_probability,
+            utility_field_right * self.world.right_probability,
+            utility_this_field * self.world.backward_probability
+        ])
+        self.assertAlmostEqual(expected_value, self.world.pu_sum_for_action(field, action), places=5)
+
+    def test_has__get_utilities_for_fields_method(self):
+        self.assertTrue(hasattr(self.world, '_get_utilities_for_fields'))
+
+    def test__get_utilities_for_fields_returns_list(self):
+        fields_list = self.world.fields_around(self.world.field(0, 0), '^')
+        self.assertTrue(isinstance(self.world._get_utilities_for_fields(fields_list), list))
+
+    def test__get_utilities_for_fields_gets_utilities_for_fields(self):
+        self.world.field(0, 0).utility = 0.1
+        self.world.field(0, 1).utility = 0.2
+        self.world.field(1, 0).utility = 0.3
+        fields_list = self.world.fields_around(self.world.field(0, 0), '^')
+        expected_list = [0.2, 0.1, 0.3, 0.1]
+        method_returns = self.world._get_utilities_for_fields(fields_list)
+        self.assertEqual(expected_list, method_returns)
+
+    def test__get_utilities_for_fields_gives_initial_utility_when_no_utility_history_for_field(self):
+        self.world.field(1, 0).utility = 0.3
+        initial_utility = self.world.initial_utility
+        fields_list = self.world.fields_around(self.world.field(0, 0), '^')
+        expected_list = [initial_utility, initial_utility, 0.3, initial_utility]
+        method_returns = self.world._get_utilities_for_fields(fields_list)
+        self.assertEqual(expected_list, method_returns)
+
+
