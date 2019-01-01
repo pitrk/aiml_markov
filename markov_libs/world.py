@@ -21,19 +21,11 @@ class World:
     right = '>'
     backward = 'v'
 
-    x_modifier = {
-        forward: 0,
-        left: -1,
-        right: 1,
-        backward: 0
-    }
+    x_modifier_front = {forward: 0, left: -1, right: 1, backward: 0}
+    y_modifier_front = {forward: 1, left: 0, right: 0, backward: -1}
 
-    y_modifier = {
-        forward: 1,
-        left: 0,
-        right: 0,
-        backward: -1
-    }
+    x_modifier_left = {forward: -1, left: 0, right: 0, backward: 1}
+    y_modifier_left = {forward: 0, left: -1, right: 1, backward: 0}
 
     def __init__(self):
         self.data = None
@@ -98,9 +90,16 @@ class World:
 
     def position_in_front(self, field, action):
         try:
-            x_in_front = field.x + self.x_modifier[action]
-            y_in_front = field.y + self.y_modifier[action]
+            x_in_front = field.x + self.x_modifier_front[action]
+            y_in_front = field.y + self.y_modifier_front[action]
             return self.field_allowed(x=x_in_front, y=y_in_front)
         except (FieldDoesNotExistException, FieldForbiddenException):
             return field
 
+    def position_left(self, field, action):
+        try:
+            x_on_left = field.x + self.x_modifier_left[action]
+            y_on_left = field.y + self.y_modifier_left[action]
+            return self.field_allowed(x=x_on_left, y=y_on_left)
+        except (FieldDoesNotExistException, FieldForbiddenException):
+            return field
