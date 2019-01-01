@@ -255,7 +255,7 @@ class TestWorldLoaded(unittest.TestCase):
         field = self.world.field(x=2, y=0)
         self.assertTupleEqual(
             (self.world.field(2, 1), self.world.field(1, 0), self.world.field(3, 0), self.world.field(2, 0)),
-            self.world.fields_around(field, '^')
+            self.world.fields_around(field, World.up)
         )
 
     def test_has_position_front_method(self):
@@ -276,86 +276,116 @@ class TestWorldLoaded(unittest.TestCase):
         return returned_position.x, returned_position.y
 
     def test_position_front_where_position_is_reachable(self):
-        self.assertTupleEqual((0, 1), self.check_position(self.world.position_front, 0, 0, '^'))
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_front, 1, 0, '<'))
-        self.assertTupleEqual((1, 0), self.check_position(self.world.position_front, 0, 0, '>'))
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_front, 0, 1, 'v'))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_front, 0, 0, World.up))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_front, 1, 0, World.left))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_front, 0, 0, World.right))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_front, 0, 1, World.down))
 
     def test_position_front_where_position_is_forbidden(self):
-        self.assertTupleEqual((1, 0), self.check_position(self.world.position_front, 1, 0, '^'))
-        self.assertTupleEqual((2, 1), self.check_position(self.world.position_front, 2, 1, '<'))
-        self.assertTupleEqual((0, 1), self.check_position(self.world.position_front, 0, 1, '>'))
-        self.assertTupleEqual((1, 2), self.check_position(self.world.position_front, 1, 2, 'v'))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_front, 1, 0, World.up))
+        self.assertTupleEqual((2, 1), self.check_position(self.world.position_front, 2, 1, World.left))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_front, 0, 1, World.right))
+        self.assertTupleEqual((1, 2), self.check_position(self.world.position_front, 1, 2, World.down))
+
+    def test_position_front_where_position_is_terminal(self):
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_front, 3, 2, World.up))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_front, 3, 2, World.left))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_front, 3, 2, World.right))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_front, 3, 2, World.down))
 
     def test_position_front_where_position_is_outside(self):
-        self.assertTupleEqual((0, 2), self.check_position(self.world.position_front, 0, 2, '^'))
-        self.assertTupleEqual((0, 1), self.check_position(self.world.position_front, 0, 1, '<'))
-        self.assertTupleEqual((3, 0), self.check_position(self.world.position_front, 3, 0, '>'))
-        self.assertTupleEqual((1, 0), self.check_position(self.world.position_front, 1, 0, 'v'))
+        self.assertTupleEqual((0, 2), self.check_position(self.world.position_front, 0, 2, World.up))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_front, 0, 1, World.left))
+        self.assertTupleEqual((3, 0), self.check_position(self.world.position_front, 3, 0, World.right))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_front, 1, 0, World.down))
 
     def test_position_left_where_position_is_reachable(self):
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_left, 1, 0, '^'))
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_left, 0, 1, '<'))
-        self.assertTupleEqual((0, 1), self.check_position(self.world.position_left, 0, 0, '>'))
-        self.assertTupleEqual((1, 0), self.check_position(self.world.position_left, 0, 0, 'v'))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_left, 1, 0, World.up))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_left, 0, 1, World.left))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_left, 0, 0, World.right))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_left, 0, 0, World.down))
 
     def test_position_left_where_position_is_forbidden(self):
-        self.assertTupleEqual((2, 1), self.check_position(self.world.position_left, 2, 1, '^'))
-        self.assertTupleEqual((1, 2), self.check_position(self.world.position_left, 1, 2, '<'))
-        self.assertTupleEqual((1, 0), self.check_position(self.world.position_left, 1, 0, '>'))
-        self.assertTupleEqual((0, 1), self.check_position(self.world.position_left, 0, 1, 'v'))
+        self.assertTupleEqual((2, 1), self.check_position(self.world.position_left, 2, 1, World.up))
+        self.assertTupleEqual((1, 2), self.check_position(self.world.position_left, 1, 2, World.left))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_left, 1, 0, World.right))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_left, 0, 1, World.down))
+
+    def test_position_left_where_position_is_terminal(self):
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_left, 3, 2, World.up))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_left, 3, 2, World.left))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_left, 3, 2, World.right))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_left, 3, 2, World.down))
 
     def test_position_left_where_position_is_outside(self):
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_left, 0, 0, '^'))
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_left, 0, 0, '<'))
-        self.assertTupleEqual((0, 2), self.check_position(self.world.position_left, 0, 2, '>'))
-        self.assertTupleEqual((3, 0), self.check_position(self.world.position_left, 3, 0, 'v'))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_left, 0, 0, World.up))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_left, 0, 0, World.left))
+        self.assertTupleEqual((0, 2), self.check_position(self.world.position_left, 0, 2, World.right))
+        self.assertTupleEqual((3, 0), self.check_position(self.world.position_left, 3, 0, World.down))
 
     def test_position_right_where_position_is_reachable(self):
-        self.assertTupleEqual((2, 0), self.check_position(self.world.position_right, 1, 0, '^'))
-        self.assertTupleEqual((0, 1), self.check_position(self.world.position_right, 0, 0, '<'))
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_right, 0, 1, '>'))
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_right, 1, 0, 'v'))
+        self.assertTupleEqual((2, 0), self.check_position(self.world.position_right, 1, 0, World.up))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_right, 0, 0, World.left))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_right, 0, 1, World.right))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_right, 1, 0, World.down))
 
     def test_position_right_where_position_is_forbidden(self):
-        self.assertTupleEqual((0, 1), self.check_position(self.world.position_right, 0, 1, '^'))
-        self.assertTupleEqual((1, 0), self.check_position(self.world.position_right, 1, 0, '<'))
-        self.assertTupleEqual((1, 2), self.check_position(self.world.position_right, 1, 2, '>'))
-        self.assertTupleEqual((2, 1), self.check_position(self.world.position_right, 2, 1, 'v'))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_right, 0, 1, World.up))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_right, 1, 0, World.left))
+        self.assertTupleEqual((1, 2), self.check_position(self.world.position_right, 1, 2, World.right))
+        self.assertTupleEqual((2, 1), self.check_position(self.world.position_right, 2, 1, World.down))
 
     def test_position_right_where_position_is_outside(self):
-        self.assertTupleEqual((3, 0), self.check_position(self.world.position_right, 3, 0, '^'))
-        self.assertTupleEqual((0, 2), self.check_position(self.world.position_right, 0, 2, '<'))
-        self.assertTupleEqual((1, 0), self.check_position(self.world.position_right, 1, 0, '>'))
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_right, 0, 0, 'v'))
+        self.assertTupleEqual((3, 0), self.check_position(self.world.position_right, 3, 0, World.up))
+        self.assertTupleEqual((0, 2), self.check_position(self.world.position_right, 0, 2, World.left))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_right, 1, 0, World.right))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_right, 0, 0, World.down))
+
+    def test_position_right_where_position_is_terminal(self):
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_right, 3, 2, World.up))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_right, 3, 2, World.left))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_right, 3, 2, World.right))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_right, 3, 2, World.down))
 
     def test_position_back_where_position_is_reachable(self):
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_back, 0, 1, '^'))
-        self.assertTupleEqual((1, 0), self.check_position(self.world.position_back, 0, 0, '<'))
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_back, 1, 0, '>'))
-        self.assertTupleEqual((0, 1), self.check_position(self.world.position_back, 0, 0, 'v'))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_back, 0, 1, World.up))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_back, 0, 0, World.left))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_back, 1, 0, World.right))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_back, 0, 0, World.down))
 
     def test_position_back_where_position_is_forbidden(self):
-        self.assertTupleEqual((1, 2), self.check_position(self.world.position_back, 1, 2, '^'))
-        self.assertTupleEqual((0, 1), self.check_position(self.world.position_back, 0, 1, '<'))
-        self.assertTupleEqual((2, 1), self.check_position(self.world.position_back, 2, 1, '>'))
-        self.assertTupleEqual((1, 0), self.check_position(self.world.position_back, 1, 0, 'v'))
+        self.assertTupleEqual((1, 2), self.check_position(self.world.position_back, 1, 2, World.up))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_back, 0, 1, World.left))
+        self.assertTupleEqual((2, 1), self.check_position(self.world.position_back, 2, 1, World.right))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_back, 1, 0, World.down))
 
     def test_position_back_where_position_is_outside(self):
-        self.assertTupleEqual((0, 0), self.check_position(self.world.position_back, 0, 0, '^'))
-        self.assertTupleEqual((3, 0), self.check_position(self.world.position_back, 3, 0, '<'))
-        self.assertTupleEqual((0, 2), self.check_position(self.world.position_back, 0, 2, '>'))
-        self.assertTupleEqual((0, 2), self.check_position(self.world.position_back, 0, 2, 'v'))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_back, 0, 0, World.up))
+        self.assertTupleEqual((3, 0), self.check_position(self.world.position_back, 3, 0, World.left))
+        self.assertTupleEqual((0, 2), self.check_position(self.world.position_back, 0, 2, World.right))
+        self.assertTupleEqual((0, 2), self.check_position(self.world.position_back, 0, 2, World.down))
+
+    def test_position_back_where_position_is_terminal(self):
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_back, 3, 2, World.up))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_back, 3, 2, World.left))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_back, 3, 2, World.right))
+        self.assertTupleEqual((3, 2), self.check_position(self.world.position_back, 3, 2, World.down))
 
     def test_has_mdf_method(self):
         self.assertTrue(hasattr(self.world, 'mdf'))
+
+    # def test_mdf_calculates_mdf_correctly(self):
+    #     self.world.mdf(n=30)
+    #     expected_utilities = [0.705, 0.655, 0.611, 0.388, 0.762, 0.0, 0.660, -1, 0.812, 0.868, 0.918, 1]
+    #     calculated_utilities = self.world._get_utilities_for_fields(self.world.all_fields())
+    #     for calculated, expected in zip(calculated_utilities, expected_utilities):
+    #         self.assertAlmostEqual(expected, calculated, places=3)
 
     def test_has_all_fields_method(self):
         self.assertTrue(hasattr(self.world, 'all_fields'))
 
     def test_all_fields_returns_list_of_fields(self):
         all_fields = self.world.all_fields()
-        print(all_fields)
         expected_len = (self.world.max_x + 1) * (self.world.max_y + 1)
         self.assertIsInstance(all_fields, list)
         self.assertIsInstance(all_fields[0], Field)
@@ -409,14 +439,14 @@ class TestWorldLoaded(unittest.TestCase):
         self.assertTrue(hasattr(self.world, '_get_utilities_for_fields'))
 
     def test__get_utilities_for_fields_returns_list(self):
-        fields_list = self.world.fields_around(self.world.field(0, 0), '^')
+        fields_list = self.world.fields_around(self.world.field(0, 0), World.up)
         self.assertTrue(isinstance(self.world._get_utilities_for_fields(fields_list), list))
 
     def test__get_utilities_for_fields_gets_utilities_for_fields(self):
         self.world.field(0, 0).utility = 0.1
         self.world.field(0, 1).utility = 0.2
         self.world.field(1, 0).utility = 0.3
-        fields_list = self.world.fields_around(self.world.field(0, 0), '^')
+        fields_list = self.world.fields_around(self.world.field(0, 0), World.up)
         expected_list = [0.2, 0.1, 0.3, 0.1]
         method_returns = self.world._get_utilities_for_fields(fields_list)
         self.assertEqual(expected_list, method_returns)
@@ -424,7 +454,7 @@ class TestWorldLoaded(unittest.TestCase):
     def test__get_utilities_for_fields_gives_initial_utility_when_no_utility_history_for_field(self):
         self.world.field(1, 0).utility = 0.3
         initial_utility = self.world.initial_utility
-        fields_list = self.world.fields_around(self.world.field(0, 0), '^')
+        fields_list = self.world.fields_around(self.world.field(0, 0), World.up)
         expected_list = [initial_utility, initial_utility, 0.3, initial_utility]
         method_returns = self.world._get_utilities_for_fields(fields_list)
         self.assertEqual(expected_list, method_returns)

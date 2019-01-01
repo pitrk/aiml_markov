@@ -110,6 +110,8 @@ class World:
         )
 
     def position_front(self, field: Field, action: str) -> Field:
+        if field.state is Field.terminal:
+            return field
         try:
             x_in_front = field.x + self.x_modifier_front[action]
             y_in_front = field.y + self.y_modifier_front[action]
@@ -118,6 +120,8 @@ class World:
             return field
 
     def position_left(self, field: Field, action: str) -> Field:
+        if field.state is Field.terminal:
+            return field
         try:
             x_on_left = field.x + self.x_modifier_left[action]
             y_on_left = field.y + self.y_modifier_left[action]
@@ -126,6 +130,8 @@ class World:
             return field
 
     def position_right(self, field: Field, action: str) -> Field:
+        if field.state is Field.terminal:
+            return field
         try:
             x_on_right = field.x + self.x_modifier_right[action]
             y_on_right = field.y + self.y_modifier_right[action]
@@ -134,6 +140,8 @@ class World:
             return field
 
     def position_back(self, field: Field, action: str) -> Field:
+        if field.state is Field.terminal:
+            return field
         try:
             x_in_back = field.x + self.x_modifier_back[action]
             y_in_back = field.y + self.y_modifier_back[action]
@@ -141,10 +149,14 @@ class World:
         except (FieldDoesNotExistException, FieldForbiddenException):
             return field
 
-    def mdf(self):
+    def mdf(self, n: int):
+        # for _ in range(n):
+        #     for field in self.all_fields():
+        #         if field.state not in [Field.forbidden, Field.terminal]:
+        #             field.utility = field.reward + self.gamma * self.max_of_all_actions(field)
         pass
 
-    def all_fields(self):
+    def all_fields(self) -> List[Field]:
         return functools.reduce(operator.iconcat, self._board, [])
 
     def max_of_all_actions(self, field: Field) -> float:
