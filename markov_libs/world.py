@@ -27,6 +27,9 @@ class World:
     x_modifier_left = {forward: -1, left: 0, right: 0, backward: 1}
     y_modifier_left = {forward: 0, left: -1, right: 1, backward: 0}
 
+    x_modifier_right = {forward: 1, left: 0, right: 0, backward: -1}
+    y_modifier_right = {forward: 0, left: 1, right: -1, backward: 0}
+
     def __init__(self):
         self.data = None
         self._board = []
@@ -101,5 +104,13 @@ class World:
             x_on_left = field.x + self.x_modifier_left[action]
             y_on_left = field.y + self.y_modifier_left[action]
             return self.field_allowed(x=x_on_left, y=y_on_left)
+        except (FieldDoesNotExistException, FieldForbiddenException):
+            return field
+
+    def position_right(self, field, action):
+        try:
+            x_on_right = field.x + self.x_modifier_right[action]
+            y_on_right = field.y + self.y_modifier_right[action]
+            return self.field_allowed(x=x_on_right, y=y_on_right)
         except (FieldDoesNotExistException, FieldForbiddenException):
             return field

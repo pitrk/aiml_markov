@@ -250,6 +250,9 @@ class TestWorldLoaded(unittest.TestCase):
     def test_has_position_left_method(self):
         self.assertTrue(hasattr(self.world, 'position_left'))
 
+    def test_has_position_right_method(self):
+        self.assertTrue(hasattr(self.world, 'position_right'))
+
     def check_position(self, direction_function, x, y, action):
         position = self.world.field(x, y)
         returned_position = direction_function(position, action)
@@ -290,3 +293,21 @@ class TestWorldLoaded(unittest.TestCase):
         self.assertTupleEqual((0, 0), self.check_position(self.world.position_left, 0, 0, '<'))
         self.assertTupleEqual((0, 2), self.check_position(self.world.position_left, 0, 2, '>'))
         self.assertTupleEqual((3, 0), self.check_position(self.world.position_left, 3, 0, 'v'))
+
+    def test_position_right_where_position_is_reachable(self):
+        self.assertTupleEqual((2, 0), self.check_position(self.world.position_right, 1, 0, '^'))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_right, 0, 0, '<'))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_right, 0, 1, '>'))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_right, 1, 0, 'v'))
+
+    def test_position_right_where_position_is_forbidden(self):
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_right, 0, 1, '^'))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_right, 1, 0, '<'))
+        self.assertTupleEqual((1, 2), self.check_position(self.world.position_right, 1, 2, '>'))
+        self.assertTupleEqual((2, 1), self.check_position(self.world.position_right, 2, 1, 'v'))
+
+    def test_position_right_where_position_is_outside(self):
+        self.assertTupleEqual((3, 0), self.check_position(self.world.position_right, 3, 0, '^'))
+        self.assertTupleEqual((0, 2), self.check_position(self.world.position_right, 0, 2, '<'))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_right, 1, 0, '>'))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_right, 0, 0, 'v'))
