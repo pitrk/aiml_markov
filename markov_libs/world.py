@@ -150,11 +150,10 @@ class World:
             return field
 
     def mdf(self, n: int):
-        # for _ in range(n):
-        #     for field in self.all_fields():
-        #         if field.state not in [Field.forbidden, Field.terminal]:
-        #             field.utility = field.reward + self.gamma * self.max_of_all_actions(field)
-        pass
+        for _ in range(n):
+            for field in self.all_fields():
+                if field.state is not Field.forbidden:
+                    field.utility = field.reward + self.gamma * self.max_of_all_actions(field)
 
     def all_fields(self) -> List[Field]:
         return functools.reduce(operator.iconcat, self._board, [])
@@ -166,6 +165,8 @@ class World:
         return max(results)
 
     def pu_sum_for_action(self, field: Field, action: str) -> float:
+        if field.state is Field.terminal:
+            return 0.0
         fields_around = self.fields_around(field, action)
         fields_utilities = self._get_utilities_for_fields(fields_around)
         return sum(p * u for p, u in zip(self.probability, fields_utilities))

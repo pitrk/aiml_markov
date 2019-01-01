@@ -31,6 +31,14 @@ class Field:
         self.y = y
         self.utility_history = [utility] if utility is not None else []
 
+    def __repr__(self):
+        return "<Field state:{} x:{} y:{}, utility_history:{}".format(
+            self.state,
+            self.x,
+            self.y,
+            self.utility_history
+        )
+
     @property
     def utility(self):
         try:

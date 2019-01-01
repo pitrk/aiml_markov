@@ -152,11 +152,6 @@ class TestWorldLoaded(unittest.TestCase):
         [[state]]
             s_type = 'F'
             position = [1, 1]
-
-        [[state]]
-            s_type = 'B'
-            position = [2, 1]
-            value = 2
         """
 
     mock_dict_content = toml.loads(mock_file_content)
@@ -374,12 +369,12 @@ class TestWorldLoaded(unittest.TestCase):
     def test_has_mdf_method(self):
         self.assertTrue(hasattr(self.world, 'mdf'))
 
-    # def test_mdf_calculates_mdf_correctly(self):
-    #     self.world.mdf(n=30)
-    #     expected_utilities = [0.705, 0.655, 0.611, 0.388, 0.762, 0.0, 0.660, -1, 0.812, 0.868, 0.918, 1]
-    #     calculated_utilities = self.world._get_utilities_for_fields(self.world.all_fields())
-    #     for calculated, expected in zip(calculated_utilities, expected_utilities):
-    #         self.assertAlmostEqual(expected, calculated, places=3)
+    def test_mdf_calculates_mdf_correctly(self):
+        self.world.mdf(n=30)
+        expected_utilities = [0.705, 0.655, 0.611, 0.388, 0.762, 0.0, 0.660, -1, 0.812, 0.868, 0.918, 1]
+        calculated_utilities = self.world._get_utilities_for_fields(self.world.all_fields())
+        for calculated, expected in zip(calculated_utilities, expected_utilities):
+            self.assertAlmostEqual(expected, calculated, places=3)
 
     def test_has_all_fields_method(self):
         self.assertTrue(hasattr(self.world, 'all_fields'))
@@ -433,6 +428,13 @@ class TestWorldLoaded(unittest.TestCase):
             utility_field_right * self.world.right_probability,
             utility_this_field * self.world.backward_probability
         ])
+        self.assertAlmostEqual(expected_value, self.world.pu_sum_for_action(field, action), places=5)
+
+    def test_pu_sum_for_action_gives_0_for_terminal_field_because_agent_cannot_move_from_this_field(self):
+        field = self.world.field(3, 2)
+        self.assertIs(Field.terminal, field.state)
+        action = World.up
+        expected_value = 0.0
         self.assertAlmostEqual(expected_value, self.world.pu_sum_for_action(field, action), places=5)
 
     def test_has__get_utilities_for_fields_method(self):
