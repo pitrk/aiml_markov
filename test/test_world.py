@@ -3,6 +3,8 @@ import unittest.mock
 import toml
 
 from markov_libs import Field
+from markov_libs import FieldForbiddenException
+from markov_libs import FieldDoesNotExistException
 from markov_libs import World
 
 
@@ -51,7 +53,6 @@ class TestWorld(unittest.TestCase):
         self.assertTrue(hasattr(self.world, 'gamma'))
         self.assertTrue(hasattr(self.world, 'epsilon'))
         self.assertTrue(hasattr(self.world, 'probability'))
-        self.assertTrue(hasattr(World, 'actions'))
 
     def test_has__parse_toml_method(self):
         self.assertTrue(hasattr(self.world, '_parse_toml'))
@@ -216,3 +217,55 @@ class TestWorldLoaded(unittest.TestCase):
         self.assertEqual([], self.world._board[1][0].utility_history)
         self.world.field(0, 1).utility = 0.88
         self.assertEqual(0.88, self.world._board[1][0].utility)
+
+    def test_has_field_allowed_method(self):
+        self.assertTrue(hasattr(self.world, 'field_allowed'))
+
+    def test_field_allowed_returns_field_if_exists_and_is_not_forbidden(self):
+        method_returns = self.world.field_allowed(x=0, y=0)
+        self.assertIs(self.world._board[0][0], method_returns)
+
+    def test_field_allowed_raises_exception_when_field_forbidden(self):
+        self.assertRaises(FieldForbiddenException, self.world.field_allowed, 1, 1)
+
+    def test_field_allowed_raises_exception_when_field_does_not_exist(self):
+        self.assertRaises(FieldDoesNotExistException, self.world.field_allowed, -1, 1)
+        self.assertRaises(FieldDoesNotExistException, self.world.field_allowed, 4, 5)
+
+    def test_has_max_x_property(self):
+        self.assertTrue(hasattr(self.world, 'max_x'))
+
+    def test_max_x_returns_maximum_x_index_of_world(self):
+        self.assertEqual(3, self.world.max_x)
+
+    def test_has_max_y_property(self):
+        self.assertTrue(hasattr(self.world, 'max_y'))
+
+    def test_max_y_returns_maximum_y_index_of_world(self):
+        self.assertEqual(2, self.world.max_y)
+
+    def test_has_position_in_front_method(self):
+        self.assertTrue(hasattr(self.world, 'position_in_front'))
+
+    def check_position(self, direction_function, x, y, action):
+        position = self.world.field(x, y)
+        returned_position = direction_function(position, action)
+        return returned_position.x, returned_position.y
+
+    def test_position_in_front_forward_move_where_position_is_reachable(self):
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_in_front, 0, 0, '^'))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_in_front, 0, 0, '>'))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_in_front, 0, 1, 'v'))
+        self.assertTupleEqual((0, 0), self.check_position(self.world.position_in_front, 1, 0, '<'))
+
+    def test_position_in_front_forward_move_where_position_is_forbidden(self):
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_in_front, 1, 0, '^'))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_in_front, 0, 1, '>'))
+        self.assertTupleEqual((1, 2), self.check_position(self.world.position_in_front, 1, 2, 'v'))
+        self.assertTupleEqual((2, 1), self.check_position(self.world.position_in_front, 2, 1, '<'))
+
+    def test_position_in_front_forward_move_where_position_is_outside(self):
+        self.assertTupleEqual((0, 2), self.check_position(self.world.position_in_front, 0, 2, '^'))
+        self.assertTupleEqual((3, 0), self.check_position(self.world.position_in_front, 3, 0, '>'))
+        self.assertTupleEqual((1, 0), self.check_position(self.world.position_in_front, 1, 0, 'v'))
+        self.assertTupleEqual((0, 1), self.check_position(self.world.position_in_front, 0, 1, '<'))

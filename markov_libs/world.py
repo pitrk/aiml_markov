@@ -1,14 +1,39 @@
 import toml
 
-from markov_libs import WorldFactory
+from markov_libs import WorldFactory, Field
 
 
 class BoardEmptyException(Exception):
     pass
 
 
+class FieldForbiddenException(Exception):
+    pass
+
+
+class FieldDoesNotExistException(Exception):
+    pass
+
+
 class World:
-    actions = ['^', '<', '>', 'v']
+    forward = '^'
+    left = '<'
+    right = '>'
+    backward = 'v'
+
+    x_modifier = {
+        forward: 0,
+        left: -1,
+        right: 1,
+        backward: 0
+    }
+
+    y_modifier = {
+        forward: 1,
+        left: 0,
+        right: 0,
+        backward: -1
+    }
 
     def __init__(self):
         self.data = None
@@ -52,5 +77,30 @@ class World:
         world_factory.board_generator()
         self._board = world_factory.board
 
-    def field(self, x: int, y: int):
+    def field(self, x: int, y: int) -> Field:
         return self._board[y][x]
+
+    def field_allowed(self, x: int, y: int) -> Field:
+        if x < 0 or y < 0 or x > self.max_x or y > self.max_y:
+            raise FieldDoesNotExistException
+        field = self._board[y][x]
+        if field.state is Field.forbidden:
+            raise FieldForbiddenException
+        return field
+
+    @property
+    def max_x(self):
+        return len(self._board[0]) - 1
+
+    @property
+    def max_y(self):
+        return len(self._board) - 1
+
+    def position_in_front(self, field, action):
+        try:
+            x_in_front = field.x + self.x_modifier[action]
+            y_in_front = field.y + self.y_modifier[action]
+            return self.field_allowed(x=x_in_front, y=y_in_front)
+        except (FieldDoesNotExistException, FieldForbiddenException):
+            return field
+
