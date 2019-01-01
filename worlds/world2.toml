@@ -8,28 +8,28 @@ probability = [0.8, 0.1, 0.1, 0.0]
 
 [[state]]
     s_type = "S"
-    position = [1, 2]
+    position = [0, 1]
 
 [[state]]
     s_type = "T"
-    position = [4, 2]
+    position = [3, 1]
     value = -1
 
 [[state]]
     s_type = "F"
-    position = [2, 2]
+    position = [1, 1]
 
 [[state]]
     s_type = "F"
-    position = [3, 2]
+    position = [2, 1]
 
 [[state]]
     s_type = "B"
-    position = [3, 1]
+    position = [2, 0]
     value = 50
 
 [[state]]
     s_type = "B"
-    position = [3, 3]
+    position = [2, 2]
     value = -50
 
