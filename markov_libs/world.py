@@ -142,6 +142,12 @@ class World:
     def mdf(self):
         pass
 
+    def max_of_all_actions(self, field: Field) -> float:
+        results = []
+        for action in self.actions:
+            results.append(self.pu_sum_for_action(field, action))
+        return max(results)
+
     def pu_sum_for_action(self, field: Field, action: str) -> float:
         fields_around = self.fields_around(field, action)
         fields_utilities = self._get_utilities_for_fields(fields_around)

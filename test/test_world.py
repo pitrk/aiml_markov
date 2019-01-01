@@ -350,6 +350,25 @@ class TestWorldLoaded(unittest.TestCase):
     def test_has_mdf_method(self):
         self.assertTrue(hasattr(self.world, 'mdf'))
 
+    def test_has_max_of_all_actions_method(self):
+        self.assertTrue(hasattr(self.world, 'max_of_all_actions'))
+
+    def test_max_of_all_actions_returns_float(self):
+        field = self.world.field(0, 0)
+        self.assertTrue(isinstance(self.world.max_of_all_actions(field), float))
+
+    def test_max_of_all_actions_returns_correct_value(self):
+        self.world.field(0, 0).utility = 0.1
+        self.world.field(0, 1).utility = 0.2
+        self.world.field(1, 0).utility = 0.3
+        field = self.world.field(0, 0)
+        pu_up = self.world.pu_sum_for_action(field, World.up)
+        pu_left = self.world.pu_sum_for_action(field, World.left)
+        pu_right = self.world.pu_sum_for_action(field, World.right)
+        pu_down = self.world.pu_sum_for_action(field, World.down)
+        expected_value = max(pu_up, pu_left, pu_right, pu_down)
+        self.assertAlmostEqual(expected_value, self.world.max_of_all_actions(field), places=5)
+
     def test_has_pu_sum_for_action_method(self):
         self.assertTrue(hasattr(self.world, 'pu_sum_for_action'))
 
