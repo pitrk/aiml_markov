@@ -350,6 +350,20 @@ class TestWorldLoaded(unittest.TestCase):
     def test_has_mdf_method(self):
         self.assertTrue(hasattr(self.world, 'mdf'))
 
+    def test_has_all_fields_method(self):
+        self.assertTrue(hasattr(self.world, 'all_fields'))
+
+    def test_all_fields_returns_list_of_fields(self):
+        all_fields = self.world.all_fields()
+        print(all_fields)
+        expected_len = (self.world.max_x + 1) * (self.world.max_y + 1)
+        self.assertIsInstance(all_fields, list)
+        self.assertIsInstance(all_fields[0], Field)
+        self.assertIs(all_fields[0], self.world.field(0, 0))
+        self.assertIs(all_fields[3], self.world.field(3, 0))
+        self.assertIs(all_fields[4], self.world.field(0, 1))
+        self.assertEqual(expected_len, len(all_fields))
+
     def test_has_max_of_all_actions_method(self):
         self.assertTrue(hasattr(self.world, 'max_of_all_actions'))
 

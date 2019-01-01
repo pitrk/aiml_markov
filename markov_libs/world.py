@@ -1,3 +1,5 @@
+import functools
+import operator
 from typing import List, Tuple, Iterable
 
 import toml
@@ -141,6 +143,9 @@ class World:
 
     def mdf(self):
         pass
+
+    def all_fields(self):
+        return functools.reduce(operator.iconcat, self._board, [])
 
     def max_of_all_actions(self, field: Field) -> float:
         results = []
