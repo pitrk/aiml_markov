@@ -149,11 +149,29 @@ class World:
         except (FieldDoesNotExistException, FieldForbiddenException):
             return field
 
-    def mdf(self, n: int):
-        for _ in range(n):
-            for field in self.all_fields():
-                if field.state is not Field.forbidden:
-                    field.utility = field.reward + self.gamma * self.max_of_all_actions(field)
+    def mdp(self, n: int = None, termination_value: float = None):
+        if n is not None:
+            for _ in range(n):
+                for field in self.all_fields():
+                    if field.state is not Field.forbidden:
+                        field.utility = field.reward + self.gamma * self.max_of_all_actions(field)
+        elif termination_value is not None:
+            while not self._mdp_stop(termination_value):
+                for field in self.all_fields():
+                    if field.state is not Field.forbidden:
+                        field.utility = field.reward + self.gamma * self.max_of_all_actions(field)
+        else:
+            raise AttributeError("Provide either maximum iterations or difference termination value")
+
+    def _mdp_stop(self, termination_value: float) -> bool:
+        differences = []
+        for field in self.all_fields():
+            if field.state not in [Field.terminal, Field.forbidden]:
+                try:
+                    differences.append(abs(field.utility_history[-2] - field.utility_history[-1]))
+                except IndexError:
+                    differences.append(float('inf'))
+        return max(differences) < termination_value
 
     def all_fields(self) -> List[Field]:
         return functools.reduce(operator.iconcat, self._board, [])

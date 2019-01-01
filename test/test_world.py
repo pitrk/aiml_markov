@@ -366,15 +366,25 @@ class TestWorldLoaded(unittest.TestCase):
         self.assertTupleEqual((3, 2), self.check_position(self.world.position_back, 3, 2, World.right))
         self.assertTupleEqual((3, 2), self.check_position(self.world.position_back, 3, 2, World.down))
 
-    def test_has_mdf_method(self):
-        self.assertTrue(hasattr(self.world, 'mdf'))
+    def test_has_mdp_method(self):
+        self.assertTrue(hasattr(self.world, 'mdp'))
 
-    def test_mdf_calculates_mdf_correctly(self):
-        self.world.mdf(n=30)
+    def test_mdp_calculates_mdp_correctly(self):
+        self.world.mdp(n=30)
         expected_utilities = [0.705, 0.655, 0.611, 0.388, 0.762, 0.0, 0.660, -1, 0.812, 0.868, 0.918, 1]
         calculated_utilities = self.world._get_utilities_for_fields(self.world.all_fields())
         for calculated, expected in zip(calculated_utilities, expected_utilities):
             self.assertAlmostEqual(expected, calculated, places=3)
+
+    def test_mdp_with_termination_value_calculates_mdp_correctly(self):
+        self.world.mdp(termination_value=0.0001)
+        expected_utilities = [0.705, 0.655, 0.611, 0.388, 0.762, 0.0, 0.660, -1, 0.812, 0.868, 0.918, 1]
+        calculated_utilities = self.world._get_utilities_for_fields(self.world.all_fields())
+        for calculated, expected in zip(calculated_utilities, expected_utilities):
+            self.assertAlmostEqual(expected, calculated, places=3)
+
+    def test_has__mdp_stop_method(self):
+        self.assertTrue(hasattr(self.world, '_mdp_stop'))
 
     def test_has_all_fields_method(self):
         self.assertTrue(hasattr(self.world, 'all_fields'))
