@@ -244,6 +244,20 @@ class TestWorldLoaded(unittest.TestCase):
     def test_max_y_returns_maximum_y_index_of_world(self):
         self.assertEqual(2, self.world.max_y)
 
+    def test_has_fields_around_method(self):
+        self.assertTrue(hasattr(self.world, 'fields_around'))
+
+    def test_fields_around_returns_tuple(self):
+        field = self.world.field(x=0, y=0)
+        self.assertTrue(isinstance(self.world.fields_around(field, action=World.up), tuple))
+
+    def test_fields_around_returns_tuple_of_fields_around_in_order_f_l_r_b(self):
+        field = self.world.field(x=2, y=0)
+        self.assertTupleEqual(
+            (self.world.field(2, 1), self.world.field(1, 0), self.world.field(3, 0), self.world.field(2, 0)),
+            self.world.fields_around(field, '^')
+        )
+
     def test_has_position_front_method(self):
         self.assertTrue(hasattr(self.world, 'position_front'))
 

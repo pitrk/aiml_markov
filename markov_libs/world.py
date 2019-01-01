@@ -16,22 +16,22 @@ class FieldDoesNotExistException(Exception):
 
 
 class World:
-    forward = '^'
+    up = '^'
     left = '<'
     right = '>'
-    backward = 'v'
+    down = 'v'
 
-    x_modifier_front = {forward: 0, left: -1, right: 1, backward: 0}
-    y_modifier_front = {forward: 1, left: 0, right: 0, backward: -1}
+    x_modifier_front = {up: 0, left: -1, right: 1, down: 0}
+    y_modifier_front = {up: 1, left: 0, right: 0, down: -1}
 
-    x_modifier_left = {forward: -1, left: 0, right: 0, backward: 1}
-    y_modifier_left = {forward: 0, left: -1, right: 1, backward: 0}
+    x_modifier_left = {up: -1, left: 0, right: 0, down: 1}
+    y_modifier_left = {up: 0, left: -1, right: 1, down: 0}
 
-    x_modifier_right = {forward: 1, left: 0, right: 0, backward: -1}
-    y_modifier_right = {forward: 0, left: 1, right: -1, backward: 0}
+    x_modifier_right = {up: 1, left: 0, right: 0, down: -1}
+    y_modifier_right = {up: 0, left: 1, right: -1, down: 0}
 
-    x_modifier_back = {forward: 0, left: 1, right: -1, backward: 0}
-    y_modifier_back = {forward: -1, left: 0, right: 0, backward: 1}
+    x_modifier_back = {up: 0, left: 1, right: -1, down: 0}
+    y_modifier_back = {up: -1, left: 0, right: 0, down: 1}
 
     def __init__(self):
         self.data = None
@@ -93,6 +93,14 @@ class World:
     @property
     def max_y(self):
         return len(self._board) - 1
+
+    def fields_around(self, field, action):
+        return (
+            self.position_front(field, action),
+            self.position_left(field, action),
+            self.position_right(field, action),
+            self.position_back(field, action)
+        )
 
     def position_front(self, field, action):
         try:
