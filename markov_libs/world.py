@@ -30,6 +30,9 @@ class World:
     x_modifier_right = {forward: 1, left: 0, right: 0, backward: -1}
     y_modifier_right = {forward: 0, left: 1, right: -1, backward: 0}
 
+    x_modifier_back = {forward: 0, left: 1, right: -1, backward: 0}
+    y_modifier_back = {forward: -1, left: 0, right: 0, backward: 1}
+
     def __init__(self):
         self.data = None
         self._board = []
@@ -91,7 +94,7 @@ class World:
     def max_y(self):
         return len(self._board) - 1
 
-    def position_in_front(self, field, action):
+    def position_front(self, field, action):
         try:
             x_in_front = field.x + self.x_modifier_front[action]
             y_in_front = field.y + self.y_modifier_front[action]
@@ -112,5 +115,13 @@ class World:
             x_on_right = field.x + self.x_modifier_right[action]
             y_on_right = field.y + self.y_modifier_right[action]
             return self.field_allowed(x=x_on_right, y=y_on_right)
+        except (FieldDoesNotExistException, FieldForbiddenException):
+            return field
+
+    def position_back(self, field, action):
+        try:
+            x_in_back = field.x + self.x_modifier_back[action]
+            y_in_back = field.y + self.y_modifier_back[action]
+            return self.field_allowed(x=x_in_back, y=y_in_back)
         except (FieldDoesNotExistException, FieldForbiddenException):
             return field
