@@ -77,10 +77,10 @@ class TestField(unittest.TestCase):
     def test_str_uility_returns_constant_width_number(self):
         field = Field(Field.normal, x=0, y=1, reward=1)
         field.utility = 1.2345678
-        self.assertEqual(6, len(field.str_utility))
-        self.assertEqual(str(1.2346), field.str_utility)
+        self.assertEqual(7, len(field.str_utility))
+        self.assertEqual(str(1.23456), field.str_utility)
 
     def test_str_uility_returns_constant_width_text_when_no_utility(self):
         field = Field(Field.normal, x=0, y=1, reward=1)
-        self.assertEqual(6, len(field.str_utility))
-        self.assertEqual("xxxxxx", field.str_utility)
+        self.assertEqual(7, len(field.str_utility))
+        self.assertEqual("xxxxxxx", field.str_utility)

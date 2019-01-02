@@ -71,6 +71,6 @@ class Field:
     @property
     def str_utility(self):
         try:
-            return ('%.4f' % self.utility)[:6]
+            return '{: >7}'.format(str(self.utility)[:7])
         except EmptyUtilityHistoryException:
-            return 'xxxxxx'
+            return 'xxxxxxx'
