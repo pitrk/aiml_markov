@@ -60,3 +60,17 @@ class Field:
             self.utility_history.pop()
         except IndexError:
             raise EmptyUtilityHistoryException
+
+    @property
+    def str_policy(self):
+        if self.policy is None:
+            return 'x'
+        else:
+            return self.policy
+
+    @property
+    def str_utility(self):
+        try:
+            return ('%.4f' % self.utility)[:6]
+        except EmptyUtilityHistoryException:
+            return 'xxxxxx'

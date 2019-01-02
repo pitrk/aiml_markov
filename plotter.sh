@@ -18,7 +18,7 @@ gnuplot <<EOF
     set xzeroaxis
     set xlabel "iteration"
     set ylabel "utilities"
-    set yrange [-1.1:1.1]
+#    set yrange [-1.1:1.1]
     set key autotitle columnhead
     set key outside right center
     set key font ",6"

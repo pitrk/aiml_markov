@@ -2,9 +2,9 @@ import unittest.mock
 
 import toml
 
-from markov_libs import Field, UtilitiesNotCalculated
-from markov_libs import FieldForbiddenException
+from markov_libs import Field
 from markov_libs import FieldDoesNotExistException
+from markov_libs import FieldForbiddenException
 from markov_libs import World
 
 

@@ -233,4 +233,16 @@ class World:
                 line += '\n'
                 f.write(line)
 
+    def __str__(self):
+        return_string = ""
+        for j in range(self.max_y, -1, -1):
+            return_string += ("-------"*(self.max_x+1) + "-\n")
+            for i in range(0, self.max_x+1):
+                return_string += ("|{}    {}".format(self._board[j][i].str_policy, self._board[j][i].state))
+            return_string += "|\n"
+            for i in range(0, self.max_x+1):
+                return_string += ("|{}".format(self._board[j][i].str_utility))
+            return_string += "|\n"
+        return_string += ("-------" * (self.max_x + 1) + "-\n")
+        return return_string
 

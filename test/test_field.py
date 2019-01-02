@@ -60,3 +60,27 @@ class TestField(unittest.TestCase):
     def test_terminal_state_utility_is_reward(self):
         field = Field(Field.terminal, x=0, y=1, reward=1)
         self.assertEqual(1, field.utility)
+
+    def test_has_str_policy_property(self):
+        self.assertTrue(hasattr(Field, 'str_policy'))
+
+    def test_str_policy_returns_correct_string(self):
+        field = Field(Field.normal, x=0, y=1, reward=1)
+        field.policy = '^'
+        self.assertEqual('^', field.str_policy)
+        field.policy = None
+        self.assertEqual('x', field.str_policy)
+
+    def test_has_str_utility_property(self):
+        self.assertTrue(hasattr(Field, 'str_utility'))
+
+    def test_str_uility_returns_constant_width_number(self):
+        field = Field(Field.normal, x=0, y=1, reward=1)
+        field.utility = 1.2345678
+        self.assertEqual(6, len(field.str_utility))
+        self.assertEqual(str(1.2346), field.str_utility)
+
+    def test_str_uility_returns_constant_width_text_when_no_utility(self):
+        field = Field(Field.normal, x=0, y=1, reward=1)
+        self.assertEqual(6, len(field.str_utility))
+        self.assertEqual("xxxxxx", field.str_utility)
