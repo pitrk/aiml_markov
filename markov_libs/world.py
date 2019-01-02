@@ -200,6 +200,7 @@ class World:
                 return_list.append(field.utility)
             except EmptyUtilityHistoryException:
                 return_list.append(self.initial_utility)
+                field.utility = self.initial_utility
         return return_list
 
     def calculate_policy(self):
@@ -215,31 +216,21 @@ class World:
         max_value = max(utilities)
         return self.actions[utilities.index(max_value)]
 
-    # def _existing_neighbours_utilities(self, field) -> List[float or None]:
-    #     utilities = []
-    #     neighbours = self._existing_neighbours(field)
-    #     try:
-    #         for neighbour in neighbours:
-    #             if neighbour is None:
-    #                 utilities.append(None)
-    #             else:
-    #                 utilities.append(neighbour.utility)
-    #     except EmptyUtilityHistoryException:
-    #         raise UtilitiesNotCalculated("Calculate MDP problem first")
-    #     return utilities
-    #
-    #
-    # def _existing_neighbours(self, field) -> List[Field or None]:
-    #     field_up = self._field_or_none(field.x, field.y + 1)
-    #     field_left = self._field_or_none(field.x - 1, field.y)
-    #     field_right = self._field_or_none(field.x + 1, field.y)
-    #     field_down = self._field_or_none(field.x, field.y - 1)
-    #     return [field_up, field_left, field_right, field_down]
-    #
-    # def _field_or_none(self, x: int, y: int) -> Field or None:
-    #     if x < 0 or y < 0 or x > self.max_x or y > self.max_y:
-    #         return None
-    #     field = self.field(x, y)
-    #     if field.state is Field.forbidden:
-    #         return None
-    #     return field
+    def generate_gnuplot_file(self, filename: str):
+        fields = self.all_fields()
+        utilities_length = len(fields[0].utility_history)-1
+        with open(filename, 'w') as f:
+            f.write('iteration ')
+            for field in fields:
+                if field.state is not Field.forbidden:
+                    f.write('({x},{y}) '.format(x=field.x+1, y=field.y+1))
+            f.write('\n')
+            for i in range(utilities_length):
+                line = "{} ".format(str(i))
+                for field in fields:
+                    if field.state is not Field.forbidden:
+                        line += "{} ".format(field.utility_history[i])
+                line += '\n'
+                f.write(line)
+
+

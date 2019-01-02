@@ -496,36 +496,6 @@ class TestWorldLoaded(unittest.TestCase):
         field = self.world.field(2, 0)
         self.assertEqual(World.left, self.world._calculate_policy_for_field(field))
 
-    # def test_has__existing_neighbours_utilities_method(self):
-    #     self.assertTrue(hasattr(self.world, '_existing_neighbours_utilities'))
-    #
-    # def test__existing_neighbours_utilities_returns_list_of_utilities(self):
-    #     self.world.mdp(termination_value=0.0001)
-    #     field = self.world.field(1, 0)
-    #     expected_result = [None, self.world.field(0, 0).utility, self.world.field(2, 0).utility, None]
-    #     self.assertEqual(expected_result, self.world._existing_neighbours_utilities(field))
-    #
-    # def test__existing_neighbours_utilities_raises_exception_when_utilities_not_calculated(self):
-    #     field = self.world.field(0, 0)
-    #     self.assertRaises(UtilitiesNotCalculated, self.world._existing_neighbours_utilities, field,)
-    #
-    # def test_has__existing_neighbours_method(self):
-    #     self.assertTrue(hasattr(self.world, '_existing_neighbours'))
-    #
-    # def test__existing_neighbours_returns_list_in_order_u_l_r_d_where_nonexisting_neighbour_is_none(self):
-    #     field = self.world.field(1, 0)
-    #     expected_list = [None, self.world.field(0, 0), self.world.field(2, 0), None]
-    #     self.assertEqual(expected_list, self.world._existing_neighbours(field))
-    #
-    # def test_has__field_or_none_method(self):
-    #     self.assertTrue(hasattr(self.world, '_field_or_none'))
-    #
-    # def test__field_or_none_returns_field_if_exists(self):
-    #     expected = self.world.field(0, 0)
-    #     self.assertIs(expected, self.world._field_or_none(x=0, y=0))
-    #
-    # def test__field_or_none_returns_none_if_field_does_not_exist(self):
-    #     self.assertIsNone(self.world._field_or_none(5, 5))
-    #
-    # def test__field_or_none_returns_none_if_field_is_forbidden(self):
-    #     self.assertIsNone(self.world._field_or_none(1, 1))
+    def test_has_generate_gnuplot_file_method(self):
+        self.assertTrue(hasattr(self.world, 'generate_gnuplot_file'))
+
