@@ -1,4 +1,5 @@
 import functools
+import numpy as np
 import operator
 from typing import List, Tuple, Iterable
 
@@ -88,6 +89,15 @@ class World:
 
     def field(self, x: int, y: int) -> Field:
         return self._board[y][x]
+
+    def start_field(self) -> Field:
+        fields_data = self.data['state']
+        position = None
+        for field_data in fields_data:
+            if field_data['s_type'] == Field.start:
+                position = field_data['position']
+                break
+        return self.field(position[0], position[1])
 
     def field_allowed(self, x: int, y: int) -> Field:
         if x < 0 or y < 0 or x > self.max_x or y > self.max_y:
@@ -246,3 +256,18 @@ class World:
         return_string += ("--------" * (self.max_x + 1) + "-\n")
         return return_string
 
+    def agent_move(self, current_position: Field, intended_action: str) -> Field:
+        self.update_actions_counter(current_position, intended_action)
+        random_number = np.random.random()
+        if random_number < self.front_probability:
+            return self.position_front(current_position, intended_action)
+        elif random_number < self.front_probability + self.left_probability:
+            return self.position_left(current_position, intended_action)
+        elif random_number < self.front_probability + self.left_probability + self.right_probability:
+            return self.position_right(current_position, intended_action)
+        else:
+            return self.position_back(current_position, intended_action)
+
+    @staticmethod
+    def update_actions_counter(field: Field, action: str) -> None:
+        field.increment_action_counter(action)

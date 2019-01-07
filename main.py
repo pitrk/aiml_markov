@@ -1,7 +1,6 @@
 import subprocess
 
-from markov_libs import World
-
+from markov_libs import World, QLearningAgent
 
 # Markov Decision Problem - default world
 world = World()
@@ -20,3 +19,7 @@ world2.calculate_policy()
 print(world2)
 world2.generate_gnuplot_file('results/default2')
 subprocess.run(["./plotter.sh", "results/default2"])
+
+ql = QLearningAgent(world)
+ql.learning(100000)
+print(ql)

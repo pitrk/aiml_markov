@@ -11,3 +11,5 @@ from .world import FieldDoesNotExistException
 from .world import FieldForbiddenException
 from .world import UtilitiesNotCalculated
 from .world import World
+
+from .q_learning_agent import QLearningAgent

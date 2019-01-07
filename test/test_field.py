@@ -84,3 +84,81 @@ class TestField(unittest.TestCase):
         field = Field(Field.normal, x=0, y=1, reward=1)
         self.assertEqual(7, len(field.str_utility))
         self.assertEqual("xxxxxxx", field.str_utility)
+
+    def test_has_q_value_method(self):
+        self.assertTrue(hasattr(Field, 'q_value'))
+
+    def test_q_val_method_returns_q_value(self):
+        field = Field(Field.normal, x=0, y=1, reward=1)
+        field.q_values = [-0.1, -0.2, -0.3, -0.4]
+        self.assertEqual(-0.1, field.q_value('^'))
+        self.assertEqual(-0.2, field.q_value('<'))
+        self.assertEqual(-0.3, field.q_value('>'))
+        self.assertEqual(-0.4, field.q_value('v'))
+
+    def test_set_q_value_method_sets_value_for_action(self):
+        field = Field(Field.normal, x=0, y=0, reward=-0.04)
+        field.set_q_value(Field.up, -0.02)
+        self.assertEqual(-0.02, field.q_value(Field.up))
+
+    def test_str_q_value_returns_constant_width_number(self):
+        field = Field(Field.normal, x=0, y=1, reward=1)
+        field.q_values = [0.0012, 0.1010, 0.2345, 0.1234]
+        self.assertEqual(5, len(field.str_q_value(Field.up)))
+        self.assertEqual(str(0.123), field.str_q_value(Field.down))
+
+    def test_str_q_value_returns_constant_width_text_when_field_forbidden(self):
+        field = Field(Field.forbidden, x=0, y=1, reward=1)
+        self.assertEqual(5, len(field.str_q_value(Field.up)))
+        self.assertEqual("xxxxx", field.str_q_value(Field.up))
+
+    def test_has_is_terminal_method(self):
+        self.assertTrue(Field, 'is_terminal')
+
+    def test_is_terminal_returns_true_when_terminal(self):
+        field = Field(Field.terminal, x=0, y=0, reward=1)
+        self.assertTrue(field.is_terminal())
+
+    def test_is_terminal_returns_false_when_not_terminal(self):
+        field = Field(Field.normal, x=0, y=0, reward=-0.04)
+        self.assertFalse(field.is_terminal())
+
+    def test_increment_action_counter_up_and_nothing_else(self):
+        field = Field(Field.normal, x=0, y=0, reward=-0.04)
+        self.assertEqual([0, 0, 0, 0], field.actions_count)
+        field.increment_action_counter(Field.up)
+        self.assertEqual(1, field.actions_count[0])
+        self.assertEqual(0, field.actions_count[1])
+        self.assertEqual(0, field.actions_count[2])
+        self.assertEqual(0, field.actions_count[3])
+
+    def test_increment_action_counter_directions(self):
+        field = Field(Field.normal, x=0, y=0, reward=-0.04)
+        field.increment_action_counter(Field.up)
+        self.assertEqual(1, field.actions_count[0])
+        field.increment_action_counter(Field.left)
+        self.assertEqual(1, field.actions_count[1])
+        field.increment_action_counter(Field.right)
+        self.assertEqual(1, field.actions_count[2])
+        field.increment_action_counter(Field.down)
+        self.assertEqual(1, field.actions_count[3])
+
+    def test_get_action_counter_value(self):
+        field = Field(Field.normal, x=0, y=0, reward=-0.04)
+        field.increment_action_counter(Field.up)
+        self.assertEqual(1, field.get_action_counter_value(Field.up))
+
+    def test_optimal_action(self):
+        field = Field(Field.normal, x=0, y=0, reward=-0.04)
+        field.q_values = [-0.02, -0.04, -0.06, -0.08]
+        self.assertEqual(Field.up, field.optimal_action())
+
+    def test_str_optimal_action(self):
+        field = Field(Field.normal, x=0, y=0, reward=-0.04)
+        field.q_values = [-0.02, -0.04, -0.06, -0.08]
+        self.assertEqual(Field.up, field.str_optimal_action())
+
+    def test_str_optimal_action_when_forbidden(self):
+        field = Field(Field.forbidden, x=0, y=0,)
+        field.q_values = [-0.02, -0.04, -0.06, -0.08]
+        self.assertEqual('x', field.str_optimal_action())

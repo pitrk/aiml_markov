@@ -213,6 +213,13 @@ class TestWorldLoaded(unittest.TestCase):
         self.world.field(0, 1).utility = 0.88
         self.assertEqual(0.88, self.world._board[1][0].utility)
 
+    def test_has_start_field_method(self):
+        self.assertTrue(hasattr(self.world, 'start_field'))
+
+    def test_start_field_returns_start_field(self):
+        start_field_obj = self.world.field(0, 0)
+        self.assertIs(start_field_obj, self.world.start_field())
+
     def test_has_field_allowed_method(self):
         self.assertTrue(hasattr(self.world, 'field_allowed'))
 
@@ -498,4 +505,10 @@ class TestWorldLoaded(unittest.TestCase):
 
     def test_has_generate_gnuplot_file_method(self):
         self.assertTrue(hasattr(self.world, 'generate_gnuplot_file'))
+
+    def test_update_actions_counter(self):
+        field = self.world.field(0, 0)
+        self.world.update_actions_counter(field, World.up)
+        self.assertEqual(1, field.actions_count[0])
+
 

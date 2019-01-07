@@ -2,7 +2,7 @@ title = "default"
 size = [4, 3]
 reward = -0.04
 gamma = 1
-epsilon = 0
+epsilon = 0.05
 probability = [0.8, 0.1, 0.1, 0.0]
 
 [[state]]
