@@ -1,0 +1,25 @@
+title = "default2"
+size = [4, 4]
+reward = -1
+gamma = 0.99
+epsilon = 0
+probability = [0.4, 0.4, 0.2, 0.0]
+
+
+[[state]]
+    s_type = "S"
+    position = [0, 0]
+
+[[state]]
+    s_type = "F"
+    position = [2, 0]
+
+[[state]]
+    s_type = "T"
+    position = [3, 0]
+    value = 100
+
+[[state]]
+    s_type = "B"
+    position = [2, 1]
+    value = -20

@@ -19,7 +19,7 @@ class QLearningAgent:
                 current_position = self.world.agent_move(previous_position, selected_action)
                 alpha = 1 / previous_position.get_action_counter_value(selected_action)
                 new_q_value = previous_position.q_value(selected_action) \
-                              + alpha * previous_position.get_action_counter_value(selected_action) \
+                              + alpha \
                               * (
                                       previous_position.reward
                                       + self.world.gamma * max(current_position.q_values)
@@ -32,10 +32,9 @@ class QLearningAgent:
 
     def select_exploration_or_exploitation(self, optimal_action: str) -> str:
         random_number = np.random.random()
-        if random_number < 1 - self.world.epsilon:
-            return optimal_action
-        else:
+        if random_number < self.world.epsilon:
             return self.random_action()
+        return optimal_action
 
     def random_action(self) -> str:
         return np.random.choice(self.world.actions)

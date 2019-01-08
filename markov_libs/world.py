@@ -271,3 +271,7 @@ class World:
     @staticmethod
     def update_actions_counter(field: Field, action: str) -> None:
         field.increment_action_counter(action)
+
+    def clean_q(self):
+        for field in self.all_fields():
+            field.clean_q()

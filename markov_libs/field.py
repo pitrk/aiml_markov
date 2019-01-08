@@ -120,3 +120,10 @@ class Field:
             return 'x'
         else:
             return self.optimal_action()
+
+    def clean_q(self):
+        if self.state is self.terminal:
+            self.q_values = [self.reward, self.reward, self.reward, self.reward]
+        else:
+            self.q_values = [0.0, 0.0, 0.0, 0.0]
+        self.actions_count = [0, 0, 0, 0]
